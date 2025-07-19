@@ -6,6 +6,11 @@ const { execSync } = require('child_process');
 
 console.log('🔧 Custom build script starting...');
 
+// Set Wrangler environment flags for Node-style builds (Webflow Cloud compatibility)
+process.env.WRANGLER_BUILD_CONDITIONS = "";
+process.env.WRANGLER_BUILD_PLATFORM = "node";
+console.log('✅ Set Wrangler build flags for Node.js compatibility');
+
 // Step 1: Handle Webflow CLI config override
 if (fs.existsSync('next.config.ts')) {
   console.log('📋 Found Webflow CLI generated next.config.ts, replacing with our config...');
