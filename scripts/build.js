@@ -6,6 +6,10 @@ const { execSync } = require('child_process');
 
 console.log('🔧 Custom build script starting...');
 
+// Store original NODE_ENV and use specific Next.js flags instead
+const originalNodeEnv = process.env.NODE_ENV;
+console.log('🔍 Original NODE_ENV:', originalNodeEnv);
+
 // Set Wrangler environment flags for Node-style builds (Webflow Cloud compatibility)
 process.env.WRANGLER_BUILD_CONDITIONS = "";
 process.env.WRANGLER_BUILD_PLATFORM = "node";
@@ -56,33 +60,49 @@ if (fs.existsSync(configPath)) {
   
   fs.writeFileSync(configPath, configContent);
   console.log('✅ Aggressively removed all standalone references from config');
+  
+  // Debug: Show what the final config looks like
+  console.log('🔍 Final config content preview:');
+  console.log(configContent.slice(0, 200) + '...');
 }
 
-// Step 3: Run Next.js build
+// Step 3: Run Next.js build  
 console.log('🏗️ Running Next.js build...');
-
-// Force disable standalone output via environment
-process.env.NEXT_BUILD_OUTPUT = '';
-process.env.STANDALONE = 'false';
-delete process.env.NEXT_OUTPUT;
-delete process.env.OUTPUT;
-
-// Also check for any Next.js config overrides
-console.log('🔍 Checking for Next.js environment overrides...');
-console.log('NODE_ENV:', process.env.NODE_ENV);
-console.log('STANDALONE env vars cleared');
+console.log('🔧 Letting Next.js build normally, will clean standalone artifacts after');
 
 try {
   execSync('npx next build', { 
     stdio: 'inherit',
     env: {
       ...process.env,
-      // Explicitly disable any standalone settings
-      NEXT_BUILD_OUTPUT: '',
-      STANDALONE: 'false'
+      // Restore original NODE_ENV for proper build
+      NODE_ENV: originalNodeEnv || process.env.NODE_ENV
     }
   });
+  
   console.log('✅ Build completed successfully!');
+  
+  // Step 4: Clean up any standalone artifacts
+  console.log('🧹 Cleaning up standalone artifacts...');
+  if (fs.existsSync('.next/standalone')) {
+    fs.rmSync('.next/standalone', { recursive: true, force: true });
+    console.log('✅ Removed .next/standalone directory');
+  } else {
+    console.log('✅ No standalone directory found');
+  }
+  
+  // Debug: Check what was actually built
+  console.log('🔍 Checking build output...');
+  if (fs.existsSync('.next')) {
+    console.log('.next directory exists');
+    if (fs.existsSync('.next/standalone')) {
+      console.log('❌ WARNING: .next/standalone directory was created despite our efforts!');
+      const standalonFiles = fs.readdirSync('.next/standalone');
+      console.log('Standalone files:', standalonFiles.slice(0, 5));
+    } else {
+      console.log('✅ No standalone directory created');
+    }
+  }
 } catch (error) {
   console.error('❌ Build failed:', error.message);
   process.exit(1);
