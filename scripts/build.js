@@ -3,9 +3,9 @@
 const { execSync } = require('child_process');
 const fs = require('fs');
 
-console.log('🔧 Simple build script for Webflow CLI compatibility...');
+console.log('🔧 Simplified build script working WITH standalone mode...');
 
-// Step 1: Check if Webflow CLI created a TypeScript config override
+// Step 1: Handle Webflow CLI config override
 if (fs.existsSync('next.config.ts')) {
   console.log('🔄 Found Webflow CLI TypeScript config override, replacing with our config...');
   
@@ -21,11 +21,11 @@ if (fs.existsSync('next.config.ts')) {
   }
 }
 
-// Step 2: Run the normal Next.js build (our config prevents standalone mode)
-console.log('🏗️ Running Next.js build...');
+// Step 2: Run Next.js build (now allowing standalone mode)
+console.log('🏗️ Running Next.js build with standalone mode...');
 try {
   execSync('npx next build', { stdio: 'inherit' });
-  console.log('✅ Build completed successfully!');
+  console.log('✅ Build completed successfully with standalone output!');
 } catch (error) {
   console.error('❌ Build failed:', error.message);
   process.exit(1);
