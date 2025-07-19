@@ -2,11 +2,9 @@
 const nextConfig = {
   output: undefined, // Prevent standalone mode - compatible with Next.js 14.2.15
   
-  // Only use basePath in production or deployment builds - TEMPORARILY DISABLED FOR DEBUGGING
-  // ...(process.env.NODE_ENV === 'production' && process.env.DISABLE_BASEPATH !== '1' && {
-  //   basePath: '/wow-bg',          
-  //   assetPrefix: '/wow-bg',
-  // }),
+  // Use basePath to match Webflow's mount path
+  basePath: '/wow-bg',          
+  assetPrefix: '/wow-bg',
   // App directory is enabled by default in Next.js 13+
   // Don't use for OpenNext/Cloudflare compatibility  
   trailingSlash: false
