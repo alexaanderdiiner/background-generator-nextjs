@@ -45,6 +45,15 @@ if (fs.existsSync(configPath)) {
     configContent = configContent.replace(/output:\s*[^,}]+,?/g, '');
   }
   
+  // Also check for any Next.js environment-based overrides
+  configContent = configContent.replace(/process\.env\.OUTPUT[^,}]*/g, '');
+  configContent = configContent.replace(/STANDALONE/g, '');
+  
+  // Add explicit output: undefined if there are any output references
+  if (configContent.includes('nextConfig') && !configContent.includes('output:')) {
+    configContent = configContent.replace(/const\s+nextConfig\s*=\s*{/, 'const nextConfig = {\n  output: undefined,');
+  }
+  
   fs.writeFileSync(configPath, configContent);
   console.log('✅ Aggressively removed all standalone references from config');
 }
@@ -54,7 +63,14 @@ console.log('🏗️ Running Next.js build...');
 
 // Force disable standalone output via environment
 process.env.NEXT_BUILD_OUTPUT = '';
+process.env.STANDALONE = 'false';
 delete process.env.NEXT_OUTPUT;
+delete process.env.OUTPUT;
+
+// Also check for any Next.js config overrides
+console.log('🔍 Checking for Next.js environment overrides...');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('STANDALONE env vars cleared');
 
 try {
   execSync('npx next build', { 
