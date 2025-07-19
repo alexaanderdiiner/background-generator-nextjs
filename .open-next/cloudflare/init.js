@@ -49,8 +49,8 @@ function initRuntime() {
   };
   Object.assign(globalThis, {
     Request: CustomRequest,
-    __BUILD_TIMESTAMP_MS__: 1752968823572,
-    __NEXT_BASE_PATH__: "/wow-bg",
+    __BUILD_TIMESTAMP_MS__: 1752969170521,
+    __NEXT_BASE_PATH__: "",
     __ASSETS_RUN_WORKER_FIRST__: false,
     // The external middleware will use the convertTo function of the `edge` converter
     // by default it will try to fetch the request, but since we are running everything in the same worker

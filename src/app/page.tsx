@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { CanvasRenderer } from '@/components/CanvasRenderer'
 import { ControlsPanel } from '@/components/ControlsPanel'
 import { Button } from '@/components/ui/button'
@@ -9,12 +9,15 @@ import { Color, getRandomMidToneColors } from '@/utils/colors'
 import { Download } from 'lucide-react'
 
 export default function Home() {
-  const [colors, setColors] = useState<Color[]>(() => {
+  const [colors, setColors] = useState<Color[]>([])
+
+  // Initialize colors after component mounts (client-side only)
+  useEffect(() => {
     console.log('Initializing colors...')
     const initialColors = getRandomMidToneColors(3)
     console.log('Initial colors:', initialColors)
-    return initialColors
-  })
+    setColors(initialColors)
+  }, [])
   
   const handleColorsChange = useCallback((newColors: Color[]) => {
     console.log('Main state updating colors to:', newColors.map((c, i) => `${i}: ${c.hex} (${c.name})`));
