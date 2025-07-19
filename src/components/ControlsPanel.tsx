@@ -471,7 +471,12 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
     <div className="h-full p-6 overflow-y-auto">
       <div className="space-y-6">
         <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-gray-800">WoW:BG</h2>
+          <div className="flex items-center gap-3">
+            <h2 className="text-2xl font-bold text-gray-800">WoW:BG</h2>
+            <span className="px-2 py-1 text-xs font-medium text-blue-600 bg-blue-100 rounded-full border border-blue-200">
+              alpha
+            </span>
+          </div>
           <p className="text-sm text-gray-600">Create beautiful, stylized backgrounds</p>
         </div>
         
