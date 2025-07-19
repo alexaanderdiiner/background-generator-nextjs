@@ -3,8 +3,9 @@ const nextConfig = {
   output: undefined,
   
   
-  
-  
+  // CRITICAL: Explicitly disable  mode for Cloudflare Edge compatibility
+                      // Ensure no  output is configured
+
   
   // Only use basePath in production or deployment builds
   ...(process.env.NODE_ENV === 'production' && process.env.DISABLE_BASEPATH !== '1' && {
@@ -12,7 +13,7 @@ const nextConfig = {
     assetPrefix: '/wow-bg',
   }),
   // App directory is enabled by default in Next.js 13+
-  // Don't use  output for OpenNext/Cloudflare compatibility  
+  // Don't use for OpenNext/Cloudflare compatibility  
   trailingSlash: false
 }
 

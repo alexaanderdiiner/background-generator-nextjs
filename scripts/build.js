@@ -82,13 +82,28 @@ try {
   
   console.log('✅ Build completed successfully!');
   
-  // Step 4: Clean up any standalone artifacts
-  console.log('🧹 Cleaning up standalone artifacts...');
-  if (fs.existsSync('.next/standalone')) {
-    fs.rmSync('.next/standalone', { recursive: true, force: true });
-    console.log('✅ Removed .next/standalone directory');
-  } else {
-    console.log('✅ No standalone directory found');
+  // Step 4: Handle standalone artifacts (create missing files if needed)
+  console.log('🔧 Checking for missing files that might cause standalone issues...');
+  
+  // Ensure routes-manifest.json exists if standalone is being forced
+  const routesManifestPath = '.next/routes-manifest.json';
+  if (!fs.existsSync(routesManifestPath)) {
+    console.log('📝 Creating missing routes-manifest.json...');
+    const routesManifest = {
+      version: 3,
+      pages404: '/404',
+      basePath: process.env.NODE_ENV === 'production' && process.env.DISABLE_BASEPATH !== '1' ? '/wow-bg' : '',
+      redirects: [],
+      headers: [],
+      dynamicRoutes: [],
+      staticRoutes: [
+        { page: '/', regex: '^/$', namedRegex: '^/$' },
+        { page: '/_not-found', regex: '^/_not\\-found$', namedRegex: '^/_not\\-found$' }
+      ],
+      dataRoutes: []
+    };
+    fs.writeFileSync(routesManifestPath, JSON.stringify(routesManifest, null, 2));
+    console.log('✅ Created routes-manifest.json');
   }
   
   // Debug: Check what was actually built
