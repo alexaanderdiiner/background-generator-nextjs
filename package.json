@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "if [ -f next.config.ts ]; then cp clouduser.next.config.js next.config.js && rm next.config.ts; fi && next build",
+    "build": "node scripts/build.js",
     "build:opennext": "DISABLE_BASEPATH=1 npm run build",
     "start": "next start",
     "lint": "next lint",
