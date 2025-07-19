@@ -5,9 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "if [ -f next.config.ts ]; then cp clouduser.next.config.js next.config.js && rm next.config.ts; fi && next build",
+    "build:opennext": "DISABLE_BASEPATH=1 npm run build",
     "start": "next start",
     "lint": "next lint",
-    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "preview": "DISABLE_BASEPATH=1 opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy"
   },
   "dependencies": {
