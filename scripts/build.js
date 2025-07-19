@@ -32,19 +32,40 @@ const configPath = 'next.config.js';
 if (fs.existsSync(configPath)) {
   let configContent = fs.readFileSync(configPath, 'utf8');
   
-  // Remove any standalone output configuration
+  // Remove any standalone output configuration (more aggressive patterns)
   configContent = configContent.replace(/output:\s*['"']standalone['"'],?\s*/g, '');
   configContent = configContent.replace(/output:\s*"standalone",?\s*/g, '');
   configContent = configContent.replace(/output:\s*'standalone',?\s*/g, '');
+  configContent = configContent.replace(/output:\s*`standalone`,?\s*/g, '');
+  configContent = configContent.replace(/['"]output['"]:\s*['"']standalone['"'],?\s*/g, '');
+  configContent = configContent.replace(/standalone/g, '');
+  
+  // Ensure we explicitly set output to undefined if it exists
+  if (configContent.includes('output:')) {
+    configContent = configContent.replace(/output:\s*[^,}]+,?/g, '');
+  }
   
   fs.writeFileSync(configPath, configContent);
-  console.log('✅ Ensured no standalone output in config');
+  console.log('✅ Aggressively removed all standalone references from config');
 }
 
 // Step 3: Run Next.js build
 console.log('🏗️ Running Next.js build...');
+
+// Force disable standalone output via environment
+process.env.NEXT_BUILD_OUTPUT = '';
+delete process.env.NEXT_OUTPUT;
+
 try {
-  execSync('npx next build', { stdio: 'inherit' });
+  execSync('npx next build', { 
+    stdio: 'inherit',
+    env: {
+      ...process.env,
+      // Explicitly disable any standalone settings
+      NEXT_BUILD_OUTPUT: '',
+      STANDALONE: 'false'
+    }
+  });
   console.log('✅ Build completed successfully!');
 } catch (error) {
   console.error('❌ Build failed:', error.message);
