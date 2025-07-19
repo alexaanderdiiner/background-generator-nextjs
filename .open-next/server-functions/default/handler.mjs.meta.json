@@ -2578,8 +2578,8 @@
       ],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/pages/_error.js": {
-      "bytes": 8526,
+    ".open-next/server-functions/default/.next/server/pages/_document.js": {
+      "bytes": 598,
       "imports": [
         {
           "path": ".open-next/server-functions/default/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js",
@@ -2625,8 +2625,8 @@
       ],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/pages/_document.js": {
-      "bytes": 598,
+    ".open-next/server-functions/default/.next/server/pages/_error.js": {
+      "bytes": 8526,
       "imports": [
         {
           "path": ".open-next/server-functions/default/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js",
@@ -2862,9 +2862,9 @@
           "external": true
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/pages/_error.js",
+          "path": ".open-next/server-functions/default/.next/server/pages/_document.js",
           "kind": "require-call",
-          "original": "/Users/alexanderdiner/background-generator-nextjs/.open-next/server-functions/default/.next/server/pages/_error.js"
+          "original": "/Users/alexanderdiner/background-generator-nextjs/.open-next/server-functions/default/.next/server/pages/_document.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/pages/_app.js",
@@ -2872,9 +2872,9 @@
           "original": "/Users/alexanderdiner/background-generator-nextjs/.open-next/server-functions/default/.next/server/pages/_app.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/pages/_document.js",
+          "path": ".open-next/server-functions/default/.next/server/pages/_error.js",
           "kind": "require-call",
-          "original": "/Users/alexanderdiner/background-generator-nextjs/.open-next/server-functions/default/.next/server/pages/_document.js"
+          "original": "/Users/alexanderdiner/background-generator-nextjs/.open-next/server-functions/default/.next/server/pages/_error.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/app/_not-found/page.js",
@@ -3269,9 +3269,9 @@
       "bytes": 935,
       "imports": [
         {
-          "path": ".open-next/server-functions/default/.next/server/pages/_error.js",
+          "path": ".open-next/server-functions/default/.next/server/pages/_document.js",
           "kind": "require-call",
-          "original": "/Users/alexanderdiner/background-generator-nextjs/.open-next/server-functions/default/.next/server/pages/_error.js"
+          "original": "/Users/alexanderdiner/background-generator-nextjs/.open-next/server-functions/default/.next/server/pages/_document.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/pages/_app.js",
@@ -3279,9 +3279,9 @@
           "original": "/Users/alexanderdiner/background-generator-nextjs/.open-next/server-functions/default/.next/server/pages/_app.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/pages/_document.js",
+          "path": ".open-next/server-functions/default/.next/server/pages/_error.js",
           "kind": "require-call",
-          "original": "/Users/alexanderdiner/background-generator-nextjs/.open-next/server-functions/default/.next/server/pages/_document.js"
+          "original": "/Users/alexanderdiner/background-generator-nextjs/.open-next/server-functions/default/.next/server/pages/_error.js"
         }
       ],
       "format": "cjs"
@@ -4161,7 +4161,7 @@
       "format": "esm"
     },
     ".open-next/server-functions/default/index.mjs": {
-      "bytes": 71072,
+      "bytes": 71045,
       "imports": [
         {
           "path": "node:module",
@@ -5198,14 +5198,14 @@
         ".open-next/server-functions/default/.next/server/webpack-runtime.js": {
           "bytesInOutput": 1766
         },
-        ".open-next/server-functions/default/.next/server/pages/_error.js": {
-          "bytesInOutput": 9007
+        ".open-next/server-functions/default/.next/server/pages/_document.js": {
+          "bytesInOutput": 697
         },
         ".open-next/server-functions/default/.next/server/pages/_app.js": {
           "bytesInOutput": 474
         },
-        ".open-next/server-functions/default/.next/server/pages/_document.js": {
-          "bytesInOutput": 697
+        ".open-next/server-functions/default/.next/server/pages/_error.js": {
+          "bytesInOutput": 9007
         },
         ".open-next/server-functions/default/node_modules/next/dist/client/components/action-async-storage-instance.js": {
           "bytesInOutput": 754
@@ -5403,10 +5403,10 @@
           "bytesInOutput": 4919
         },
         ".open-next/server-functions/default/index.mjs": {
-          "bytesInOutput": 49084
+          "bytesInOutput": 49064
         }
       },
-      "bytes": 1982768
+      "bytes": 1982748
     }
   }
 }
