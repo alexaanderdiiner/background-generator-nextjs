@@ -9,7 +9,11 @@ import { Color, getRandomMidToneColors } from '@/utils/colors'
 import { Download } from 'lucide-react'
 
 export default function Home() {
-  const [colors, setColors] = useState<Color[]>([])
+  const [colors, setColors] = useState<Color[]>([
+    { name: 'Blue 500', hex: '#3B82F6', rgb: [59, 130, 246] },
+    { name: 'Green 500', hex: '#10B981', rgb: [16, 185, 129] },
+    { name: 'Purple 500', hex: '#8B5CF6', rgb: [139, 92, 246] }
+  ])
 
   // Initialize colors after component mounts (client-side only)
   useEffect(() => {
