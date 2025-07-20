@@ -416,6 +416,7 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
   // Drag and drop state for color reordering
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null)
+  const [insertionSide, setInsertionSide] = useState<'left' | 'right'>('right')
 
   const handleColorClick = (index: number) => {
     setColorPickerIndex(index)
@@ -485,11 +486,32 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>, index: number) => {
     e.preventDefault()
     e.dataTransfer.dropEffect = 'move'
+    
+    if (draggedIndex === null || draggedIndex === index) return
+    
+    // Calculate insertion side based on mouse position within the element
+    const rect = e.currentTarget.getBoundingClientRect()
+    const mouseX = e.clientX - rect.left
+    const isLeftSide = mouseX < rect.width / 2
+    
+    // Determine insertion side based on drag direction and mouse position
+    let side: 'left' | 'right' = 'right'
+    
+    if (draggedIndex !== null && draggedIndex < index) {
+      // Dragging from left to right - insert after target (right side)
+      side = isLeftSide ? 'left' : 'right'
+    } else if (draggedIndex !== null && draggedIndex > index) {
+      // Dragging from right to left - insert before target (left side) 
+      side = isLeftSide ? 'left' : 'right'
+    }
+    
     setDragOverIndex(index)
+    setInsertionSide(side)
   }
 
   const handleDragLeave = () => {
     setDragOverIndex(null)
+    setInsertionSide('right')
   }
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>, dropIndex: number) => {
@@ -519,6 +541,7 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
   const handleDragEnd = () => {
     setDraggedIndex(null)
     setDragOverIndex(null)
+    setInsertionSide('right')
   }
 
 
@@ -579,8 +602,22 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
                     key={`${index}-${color.hex}`} 
                     className={`relative group transition-all duration-200 ${
                       isDragging ? 'opacity-50 scale-110 rotate-3' : ''
-                    } ${isDropTarget ? 'scale-110' : ''}`}
+                    }`}
                   >
+                    {/* Insertion Line Indicator */}
+                    {isDropTarget && (
+                      <div 
+                        className={`absolute top-0 bottom-0 w-0.5 bg-blue-500 z-20 transition-all duration-200 ${
+                          insertionSide === 'left' ? '-left-1' : '-right-1'
+                        }`}
+                        style={{ 
+                          height: '40px',
+                          transform: 'translateY(-4px)',
+                          borderRadius: '2px',
+                          boxShadow: '0 0 4px rgba(59, 130, 246, 0.6)'
+                        }}
+                      />
+                    )}
                                   <div
                       draggable={true}
                       onDragStart={(e) => handleDragStart(e, index)}
@@ -588,16 +625,14 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
                       onDragLeave={handleDragLeave}
                       onDrop={(e) => handleDrop(e, index)}
                       onDragEnd={handleDragEnd}
-                  className={`swatch-${index}-${color.hex.replace('#', '')} transition-all duration-200 ${
-                    isDragging ? 'cursor-grabbing' : 'cursor-grab hover:scale-105'
-                  } ${
-                    isDropTarget ? 'ring-2 ring-blue-400 ring-offset-2' : ''
-                  }`}
+                                     className={`swatch-${index}-${color.hex.replace('#', '')} transition-all duration-200 ${
+                     isDragging ? 'cursor-grabbing' : 'cursor-grab hover:scale-105'
+                   }`}
                   style={{ 
                     width: '32px',
                     height: '32px',
                     borderRadius: '16px',
-                    border: isDropTarget ? '2px solid #3b82f6' : '2px solid #ccc',
+                    border: '2px solid #ccc',
                     position: 'relative',
                     display: 'inline-block'
                   }}
