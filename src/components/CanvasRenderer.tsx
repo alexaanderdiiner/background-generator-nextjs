@@ -30,6 +30,22 @@ interface CanvasRendererProps {
   onCanvasReady: (canvas: HTMLCanvasElement) => void
 }
 
+// Utility function to ensure valid hex colors for canvas
+const sanitizeHexColor = (hexColor: string): string => {
+  if (!hexColor || typeof hexColor !== 'string') return '#ffffff'
+  
+  // Remove # and any extra characters, keep only first 6 characters
+  const cleanHex = hexColor.replace('#', '').substring(0, 6)
+  
+  // Validate hex characters
+  if (!/^[0-9A-Fa-f]{6}$/.test(cleanHex)) {
+    console.warn(`Invalid hex color "${hexColor}", defaulting to #ffffff`)
+    return '#ffffff'
+  }
+  
+  return `#${cleanHex}`
+}
+
 export const CanvasRenderer: React.FC<CanvasRendererProps> = ({
   colors,
   posterizeSteps,
@@ -75,6 +91,7 @@ export const CanvasRenderer: React.FC<CanvasRendererProps> = ({
         
         // Use colors from main state, not from blob.color - this ensures sync with ControlsPanel
         const color = colors[index % colors.length]
+        const safeHex = sanitizeHexColor(color?.hex)
         
         // Base positions with optional animation drift
         let x = blob.x * width
@@ -112,9 +129,9 @@ export const CanvasRenderer: React.FC<CanvasRendererProps> = ({
         const centerHex = centerOpacity.toString(16).padStart(2, '0')
         const midHex = midOpacity.toString(16).padStart(2, '0')
         
-        gradient.addColorStop(0, `${color.hex}${centerHex}`)
-        gradient.addColorStop(0.6, `${color.hex}${midHex}`)
-        gradient.addColorStop(1, `${color.hex}00`)
+        gradient.addColorStop(0, `${safeHex}${centerHex}`)
+        gradient.addColorStop(0.6, `${safeHex}${midHex}`)
+        gradient.addColorStop(1, `${safeHex}00`)
         
         // Balanced blend modes that give each color equal representation
         if (index === 0) {
