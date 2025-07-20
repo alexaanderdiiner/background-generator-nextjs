@@ -1,7 +1,7 @@
 {
   "name": "background-generator-nextjs",
   "version": "0.1.0",
-  "alphaVersion": "alpha.2",
+  "alphaVersion": "alpha.3",
   "private": true,
   "scripts": {
     "dev": "next dev",
