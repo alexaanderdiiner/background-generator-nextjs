@@ -30,7 +30,7 @@ export default function Home() {
   }, [])
   const [posterizeSteps, setPosterizeSteps] = useState(8)
   const [noiseIntensity, setNoiseIntensity] = useState(0.15)
-  const [gradientStyle, setGradientStyle] = useState<'organic' | 'linear' | 'radial' | 'wave'>('organic')
+  const [gradientStyle, setGradientStyle] = useState<'organic' | 'linear' | 'radial' | 'wave' | 'sunburst'>('organic')
   const [gradientIntensity, setGradientIntensity] = useState(0.8)
   const [gradientDensity, setGradientDensity] = useState(0.7)
   const [zoomLevel, setZoomLevel] = useState(1.0)

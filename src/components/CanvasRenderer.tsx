@@ -15,7 +15,7 @@ interface CanvasRendererProps {
   colors: Color[]
   posterizeSteps: number
   noiseIntensity: number
-  gradientStyle: 'organic' | 'linear' | 'radial' | 'wave'
+  gradientStyle: 'organic' | 'linear' | 'radial' | 'wave' | 'sunburst'
   gradientIntensity: number
   gradientDensity: number
   colorBlobs?: ColorBlob[]
@@ -785,6 +785,130 @@ export const CanvasRenderer: React.FC<CanvasRendererProps> = ({
     }
   }, [colors, gradientIntensity, gradientDensity, colorBlobs, isAnimated, animationSpeed])
 
+  // Create sunburst radial rays emanating from center
+  const createSunburstGradient = useCallback((ctx: CanvasRenderingContext2D, width: number, height: number, time: number = 0) => {
+    // Scale intensity and density to maintain same strength with 0-100% UI range
+    const scaledIntensity = gradientIntensity * 1.2 // Maintain 120% internal strength
+    const scaledDensity = gradientDensity * 1.5 // Maintain 150% internal strength
+    
+    // Always use solid background color
+    const baseColor = colors[0] || { hex: '#ffffff' }
+    ctx.fillStyle = baseColor.hex
+    ctx.fillRect(0, 0, width, height)
+    
+    // Center point for the sunburst (customizable later)
+    const centerX = width * 0.5
+    const centerY = height * 0.5
+    
+    // Add slight animation to center if enabled
+    let animatedCenterX = centerX
+    let animatedCenterY = centerY
+    
+    if (isAnimated) {
+      const smoothTime = time * 0.0001 * animationSpeed
+      const driftAmount = Math.min(width, height) * 0.02
+      animatedCenterX += Math.sin(smoothTime * 0.7) * driftAmount
+      animatedCenterY += Math.cos(smoothTime * 0.5) * driftAmount
+    }
+    
+    // Calculate number of rays based on density (16-64 rays)
+    const minRays = 16
+    const maxRays = 64
+    const baseRayCount = Math.floor(minRays + (scaledDensity * (maxRays - minRays)))
+    const rayCount = Math.max(minRays, baseRayCount)
+    
+    // Calculate radius for rays (should extend beyond canvas)
+    const maxDimension = Math.max(width, height)
+    const rayRadius = maxDimension * 1.2 // Extend beyond canvas
+    
+    // Rotation animation
+    let rotationOffset = 0
+    if (isAnimated) {
+      const smoothTime = time * 0.00005 * animationSpeed // Very slow rotation
+      rotationOffset = smoothTime
+    }
+    
+    // Draw alternating color rays
+    for (let i = 0; i < rayCount; i++) {
+      const angle = (i / rayCount) * Math.PI * 2 + rotationOffset
+      const colorIndex = i % colors.length
+      const color = colors[colorIndex]
+      const safeHex = sanitizeHexColor(color?.hex)
+      
+      // Calculate ray width based on intensity and density
+      const baseRayWidth = (Math.PI * 2) / rayCount // Base angular width
+      const rayWidth = baseRayWidth * (0.7 + scaledIntensity * 0.6) // 70%-130% of base width
+      
+      // Create wedge path
+      ctx.beginPath()
+      ctx.moveTo(animatedCenterX, animatedCenterY)
+      
+      // Create smooth arc for the ray
+      const startAngle = angle - rayWidth / 2
+      const endAngle = angle + rayWidth / 2
+      
+      ctx.arc(animatedCenterX, animatedCenterY, rayRadius, startAngle, endAngle)
+      ctx.closePath()
+      
+      // Create radial gradient for this ray
+      const gradient = ctx.createRadialGradient(
+        animatedCenterX, animatedCenterY, 0,
+        animatedCenterX, animatedCenterY, rayRadius * 0.8
+      )
+      
+      // Opacity based on intensity and ray index for variation
+      const baseOpacity = 0.15 + scaledIntensity * 0.35 // 15%-50% range
+      const rayVariation = 0.8 + (Math.sin(i * 0.5) * 0.4) // Vary each ray slightly
+      const finalOpacity = Math.floor(baseOpacity * rayVariation * 255)
+      
+      const centerHex = Math.min(255, finalOpacity * 1.2).toString(16).padStart(2, '0')
+      const midHex = finalOpacity.toString(16).padStart(2, '0')
+      const edgeHex = Math.floor(finalOpacity * 0.3).toString(16).padStart(2, '0')
+      
+      gradient.addColorStop(0, `${safeHex}${centerHex}`)
+      gradient.addColorStop(0.3, `${safeHex}${midHex}`)
+      gradient.addColorStop(0.7, `${safeHex}${edgeHex}`)
+      gradient.addColorStop(1, `${safeHex}00`)
+      
+      // Blend modes for layering
+      if (i === 0) {
+        ctx.globalCompositeOperation = 'source-over'
+      } else {
+        const blendModes: GlobalCompositeOperation[] = ['overlay', 'soft-light', 'multiply', 'screen', 'color-dodge']
+        ctx.globalCompositeOperation = blendModes[i % blendModes.length]
+      }
+      
+      ctx.fillStyle = gradient
+      ctx.fill()
+    }
+    
+    // Add central glow at higher intensities
+    if (scaledIntensity > 0.5) {
+      const glowRadius = Math.min(width, height) * 0.2 * scaledIntensity
+      const glowGradient = ctx.createRadialGradient(
+        animatedCenterX, animatedCenterY, 0,
+        animatedCenterX, animatedCenterY, glowRadius
+      )
+      
+      // Use primary color for central glow
+      const glowColor = colors[0]
+      const glowHex = sanitizeHexColor(glowColor?.hex)
+      const glowOpacity = Math.floor((scaledIntensity - 0.5) * 2 * 0.4 * 255)
+      const glowOpacityHex = glowOpacity.toString(16).padStart(2, '0')
+      
+      glowGradient.addColorStop(0, `${glowHex}${glowOpacityHex}`)
+      glowGradient.addColorStop(0.5, `${glowHex}${Math.floor(glowOpacity * 0.5).toString(16).padStart(2, '0')}`)
+      glowGradient.addColorStop(1, `${glowHex}00`)
+      
+      ctx.globalCompositeOperation = 'overlay'
+      ctx.fillStyle = glowGradient
+      ctx.beginPath()
+      ctx.arc(animatedCenterX, animatedCenterY, glowRadius, 0, Math.PI * 2)
+      ctx.fill()
+    }
+    
+  }, [colors, gradientIntensity, gradientDensity, isAnimated, animationSpeed])
+
   // Main gradient creation function that chooses the style
   const createGradient = useCallback((ctx: CanvasRenderingContext2D, width: number, height: number, time: number = 0) => {
     // Save current transform
@@ -815,9 +939,11 @@ export const CanvasRenderer: React.FC<CanvasRendererProps> = ({
       case 'radial':
         createRadialGradient(ctx, effectiveWidth, effectiveHeight, time)
         break
-
       case 'wave':
         createWaveGradient(ctx, effectiveWidth, effectiveHeight, time)
+        break
+      case 'sunburst':
+        createSunburstGradient(ctx, effectiveWidth, effectiveHeight, time)
         break
       default:
         createOrganicGradient(ctx, effectiveWidth, effectiveHeight)
@@ -825,7 +951,7 @@ export const CanvasRenderer: React.FC<CanvasRendererProps> = ({
     
     // Restore transform
     ctx.restore()
-  }, [gradientStyle, zoomLevel, createOrganicGradient, createLinearGradient, createRadialGradient, createWaveGradient])
+  }, [gradientStyle, zoomLevel, createOrganicGradient, createLinearGradient, createRadialGradient, createWaveGradient, createSunburstGradient])
 
   // Apply heavy blur using multiple passes for ultra-soft ethereal effect
   const applyHeavyBlur = useCallback((ctx: CanvasRenderingContext2D, width: number, height: number) => {

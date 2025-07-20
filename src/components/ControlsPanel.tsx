@@ -13,13 +13,13 @@ interface ControlsPanelProps {
   colors: Color[]
   posterizeSteps: number
   noiseIntensity: number
-  gradientStyle: 'organic' | 'linear' | 'radial' | 'wave'
+  gradientStyle: 'organic' | 'linear' | 'radial' | 'wave' | 'sunburst'
   gradientIntensity: number
   gradientDensity: number
   onColorsChange: (colors: Color[]) => void
   onPosterizeStepsChange: (steps: number) => void
   onNoiseIntensityChange: (intensity: number) => void
-  onGradientStyleChange: (style: 'organic' | 'linear' | 'radial' | 'wave') => void
+  onGradientStyleChange: (style: 'organic' | 'linear' | 'radial' | 'wave' | 'sunburst') => void
   onGradientIntensityChange: (intensity: number) => void
   onGradientDensityChange: (density: number) => void
   zoomLevel: number
@@ -862,8 +862,8 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
               <SelectItem value="organic">Organic Blobs</SelectItem>
               <SelectItem value="linear">Linear Flow</SelectItem>
               <SelectItem value="radial">Radial Burst</SelectItem>
-
               <SelectItem value="wave">Gradient Mesh</SelectItem>
+              <SelectItem value="sunburst">Sunburst Rays</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -907,8 +907,8 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
             {gradientStyle === 'organic' && `Complexity: ${Math.round(gradientDensity * 100)}%`}
             {gradientStyle === 'linear' && `Layers: ${Math.round(gradientDensity * 100)}%`}
             {gradientStyle === 'radial' && `Centers: ${Math.round(gradientDensity * 100)}%`}
-            
-                          {gradientStyle === 'wave' && `Density: ${Math.round(gradientDensity * 100)}%`}
+            {gradientStyle === 'wave' && `Density: ${Math.round(gradientDensity * 100)}%`}
+            {gradientStyle === 'sunburst' && `Rays: ${Math.round(gradientDensity * 100)}%`}
           </Label>
           <Slider
             value={[gradientDensity]}
@@ -922,8 +922,8 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
             {gradientStyle === 'organic' && 'More complexity = more color blobs'}
             {gradientStyle === 'linear' && 'More layers = richer gradient depth'}
             {gradientStyle === 'radial' && 'More centers = multiple focal points'}
-            
-                          {gradientStyle === 'wave' && 'Higher density = more triangular mesh zones'}
+            {gradientStyle === 'wave' && 'Higher density = more triangular mesh zones'}
+            {gradientStyle === 'sunburst' && 'More rays = denser sunburst pattern'}
           </p>
         </div>
 
