@@ -412,6 +412,10 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
   const [uploadedImage, setUploadedImage] = useState<string | null>(null)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  
+  // Drag and drop state for color reordering
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null)
 
   const handleColorClick = (index: number) => {
     setColorPickerIndex(index)
@@ -465,6 +469,58 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
     }
   }
 
+  // Drag and drop handlers for color reordering
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+    setDraggedIndex(index)
+    e.dataTransfer.effectAllowed = 'move'
+    e.dataTransfer.setData('text/html', index.toString())
+    
+    // Create custom drag image
+    const dragImage = e.currentTarget.cloneNode(true) as HTMLElement
+    dragImage.style.transform = 'rotate(5deg) scale(1.1)'
+    dragImage.style.opacity = '0.8'
+    e.dataTransfer.setDragImage(dragImage, 16, 16)
+  }
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+    setDragOverIndex(index)
+  }
+
+  const handleDragLeave = () => {
+    setDragOverIndex(null)
+  }
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>, dropIndex: number) => {
+    e.preventDefault()
+    
+    if (draggedIndex === null || draggedIndex === dropIndex) {
+      setDraggedIndex(null)
+      setDragOverIndex(null)
+      return
+    }
+
+    // Reorder the colors array
+    const newColors = [...colors]
+    const draggedColor = newColors[draggedIndex]
+    
+    // Remove the dragged item
+    newColors.splice(draggedIndex, 1)
+    
+    // Insert at the new position
+    newColors.splice(dropIndex, 0, draggedColor)
+    
+    onColorsChange(newColors)
+    setDraggedIndex(null)
+    setDragOverIndex(null)
+  }
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null)
+    setDragOverIndex(null)
+  }
+
 
 
   return (
@@ -482,7 +538,10 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
         
         {/* Color Selection */}
         <div className="space-y-2">
-          <Label>Colors ({colors.length})</Label>
+          <div className="flex items-center justify-between">
+            <Label>Colors ({colors.length})</Label>
+            <span className="text-xs text-gray-500 dark:text-gray-400">Drag to reorder</span>
+          </div>
           <div className="flex gap-2">
             <Select onValueChange={handleColorSelection}>
               <SelectTrigger className="flex-1">
@@ -508,24 +567,41 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
             </Button>
           </div>
           
-                    {/* Interactive Color Swatches */}
+                    {/* Interactive Draggable Color Swatches */}
           <div className="flex flex-wrap gap-2 mt-2">
                           {colors.map((color, index) => {
+                const isDragging = draggedIndex === index
+                const isDropTarget = dragOverIndex === index && draggedIndex !== null && draggedIndex !== index
+                
                 console.log(`Swatch ${index}: visual=${color.hex}, name=${color.name}, full object:`, color);
                 return (
-                  <div key={`${index}-${color.hex}`} className="relative group">
+                  <div 
+                    key={`${index}-${color.hex}`} 
+                    className={`relative group transition-all duration-200 ${
+                      isDragging ? 'opacity-50 scale-110 rotate-3' : ''
+                    } ${isDropTarget ? 'scale-110' : ''}`}
+                  >
                                   <div
-                  className={`swatch-${index}-${color.hex.replace('#', '')}`}
+                      draggable={true}
+                      onDragStart={(e) => handleDragStart(e, index)}
+                      onDragOver={(e) => handleDragOver(e, index)}
+                      onDragLeave={handleDragLeave}
+                      onDrop={(e) => handleDrop(e, index)}
+                      onDragEnd={handleDragEnd}
+                  className={`swatch-${index}-${color.hex.replace('#', '')} transition-all duration-200 ${
+                    isDragging ? 'cursor-grabbing' : 'cursor-grab hover:scale-105'
+                  } ${
+                    isDropTarget ? 'ring-2 ring-blue-400 ring-offset-2' : ''
+                  }`}
                   style={{ 
                     width: '32px',
                     height: '32px',
                     borderRadius: '16px',
-                    border: '2px solid #ccc',
-                    cursor: 'pointer',
+                    border: isDropTarget ? '2px solid #3b82f6' : '2px solid #ccc',
                     position: 'relative',
                     display: 'inline-block'
                   }}
-                  title={`${color.name} (${color.hex}) - Click to change`}
+                  title={`${color.name} (${color.hex}) - Drag to reorder, click to change`}
                   data-color-hex={color.hex}
                   ref={(el) => {
                     if (el) {
@@ -534,20 +610,30 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
                       console.log(`Applied ${color.hex} to swatch ${index}, computed style:`, getComputedStyle(el).backgroundColor);
                     }
                   }}
-                    onClick={() => {
+                    onClick={(e) => {
+                      // Prevent click when dragging
+                      if (isDragging) return
                       console.log(`Clicked swatch ${index}:`, color);
                       handleColorClick(index);
                     }}
                                     />
                   {colors.length > 2 && (
                     <button
-                      className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
-                      onClick={() => handleRemoveColor(index)}
+                      className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-10"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleRemoveColor(index)
+                      }}
                       title="Remove color"
                     >
                       <X className="w-2 h-2" />
                     </button>
                   )}
+                  
+                  {/* Drag handle indicator */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-30 transition-opacity pointer-events-none">
+                    <div className="text-white text-xs font-bold drop-shadow-lg">⋮⋮</div>
+                  </div>
                 </div>
               );
             })}
