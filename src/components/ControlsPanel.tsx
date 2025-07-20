@@ -771,7 +771,7 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
             value={[gradientIntensity]}
             onValueChange={(value) => onGradientIntensityChange(value[0])}
             min={0.1}
-            max={1.2}
+            max={1.0}
             step={0.1}
             className="w-full"
           />
@@ -793,7 +793,7 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
             value={[gradientDensity]}
             onValueChange={(value) => onGradientDensityChange(value[0])}
             min={0.2}
-            max={1.5}
+            max={1.0}
             step={0.1}
             className="w-full"
           />

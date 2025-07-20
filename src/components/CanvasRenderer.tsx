@@ -70,6 +70,10 @@ export const CanvasRenderer: React.FC<CanvasRendererProps> = ({
 
   // Create gradients that scale from subtle to dramatic based on intensity  
   const createOrganicGradient = useCallback((ctx: CanvasRenderingContext2D, width: number, height: number, time: number = 0) => {
+    // Scale intensity and density to maintain same strength with 0-100% UI range
+    const scaledIntensity = gradientIntensity * 1.2 // Maintain 120% internal strength
+    const scaledDensity = gradientDensity * 1.5 // Maintain 150% internal strength
+    
     // Always use solid background color - never transparent
     const baseColor = colors[0] || { hex: '#ffffff' }
     ctx.fillStyle = baseColor.hex
@@ -78,7 +82,7 @@ export const CanvasRenderer: React.FC<CanvasRendererProps> = ({
     // Use positioned blobs if available from image analysis
     if (colorBlobs && colorBlobs.length > 0) {
       // Limit blobs based on complexity setting
-      const maxBlobs = Math.floor(2 + (gradientDensity * 8)) // 2-10 blobs based on complexity
+      const maxBlobs = Math.floor(2 + (scaledDensity * 8)) // 2-10 blobs based on complexity
       const selectedBlobs = colorBlobs.slice(0, maxBlobs)
       
       // Create positioned blobs with intensity-based contrast
@@ -108,8 +112,8 @@ export const CanvasRenderer: React.FC<CanvasRendererProps> = ({
           y += (Math.cos(smoothTime * 0.8 + uniqueOffset + 1.5) * 0.6 + Math.cos(smoothTime * 1.1 + uniqueOffset + 3) * 0.4) * driftAmount
         }
         // Size scales with intensity: smaller at low intensity, larger at high intensity
-        const sizeMultiplier = 0.5 + (gradientIntensity * 1.5)
-        let radius = blob.radius * Math.min(width, height) * gradientIntensity * sizeMultiplier
+        const sizeMultiplier = 0.5 + (scaledIntensity * 1.5)
+        let radius = blob.radius * Math.min(width, height) * scaledIntensity * sizeMultiplier
         
         // Add very subtle breathing animation if enabled
         if (isAnimated) {
@@ -122,7 +126,7 @@ export const CanvasRenderer: React.FC<CanvasRendererProps> = ({
         
         // Balanced opacity that ensures all colors are visible
         // Adjust opacity based on color index to prevent single color dominance
-        const baseOpacity = 0.3 + gradientIntensity * 0.5 // 30%-80% range
+        const baseOpacity = 0.3 + scaledIntensity * 0.5 // 30%-80% range
         const colorBalance = Math.max(0.3, 1 - (index * 0.05)) // Ensure minimum 30% opacity, gentler reduction
         const centerOpacity = Math.max(0, Math.min(255, Math.floor(baseOpacity * colorBalance * 255)))
         const midOpacity = Math.max(0, Math.min(255, Math.floor(centerOpacity * 0.7)))
@@ -328,6 +332,10 @@ export const CanvasRenderer: React.FC<CanvasRendererProps> = ({
 
   // Create linear flowing gradients with balanced layering and blend modes
   const createLinearGradient = useCallback((ctx: CanvasRenderingContext2D, width: number, height: number, time: number = 0) => {
+    // Scale intensity and density to maintain same strength with 0-100% UI range
+    const scaledIntensity = gradientIntensity * 1.2 // Maintain 120% internal strength
+    const scaledDensity = gradientDensity * 1.5 // Maintain 150% internal strength
+    
     // Always use solid background color
     const baseColor = colors[0] || { hex: '#ffffff' }
     ctx.fillStyle = baseColor.hex
@@ -336,8 +344,8 @@ export const CanvasRenderer: React.FC<CanvasRendererProps> = ({
     // Smart layer count scaling
     const minLayers = 3
     const maxLayers = 12
-    const baseLayers = Math.floor(minLayers + (gradientDensity * (maxLayers - minLayers)))
-    const intensityBonus = Math.floor(gradientIntensity * 4)
+    const baseLayers = Math.floor(minLayers + (scaledDensity * (maxLayers - minLayers)))
+    const intensityBonus = Math.floor(scaledIntensity * 4)
     const numLayers = baseLayers + intensityBonus
     
     // Use image-aware angles if colorBlobs exist
@@ -445,6 +453,10 @@ export const CanvasRenderer: React.FC<CanvasRendererProps> = ({
 
   // Create radial burst gradients with balanced positioning and blend modes
   const createRadialGradient = useCallback((ctx: CanvasRenderingContext2D, width: number, height: number, time: number = 0) => {
+    // Scale intensity and density to maintain same strength with 0-100% UI range
+    const scaledIntensity = gradientIntensity * 1.2 // Maintain 120% internal strength
+    const scaledDensity = gradientDensity * 1.5 // Maintain 150% internal strength
+    
     // Always use solid background color
     const baseColor = colors[0] || { hex: '#ffffff' }
     ctx.fillStyle = baseColor.hex
@@ -453,8 +465,8 @@ export const CanvasRenderer: React.FC<CanvasRendererProps> = ({
     // Smart center count scaling
     const minCenters = 2
     const maxCenters = 8
-    const baseCenters = Math.floor(minCenters + (gradientDensity * (maxCenters - minCenters)))
-    const intensityBonus = Math.floor(gradientIntensity * 3)
+    const baseCenters = Math.floor(minCenters + (scaledDensity * (maxCenters - minCenters)))
+    const intensityBonus = Math.floor(scaledIntensity * 3)
     const numCenters = baseCenters + intensityBonus
     
     // Use image-aware positioning if colorBlobs exist
@@ -594,6 +606,10 @@ export const CanvasRenderer: React.FC<CanvasRendererProps> = ({
 
   // Create gradient mesh with balanced triangular color zones
   const createWaveGradient = useCallback((ctx: CanvasRenderingContext2D, width: number, height: number, time: number = 0) => {
+    // Scale intensity and density to maintain same strength with 0-100% UI range
+    const scaledIntensity = gradientIntensity * 1.2 // Maintain 120% internal strength
+    const scaledDensity = gradientDensity * 1.5 // Maintain 150% internal strength
+    
     // Always use solid background color
     const baseColor = colors[0] || { hex: '#ffffff' }
     ctx.fillStyle = baseColor.hex
@@ -602,8 +618,8 @@ export const CanvasRenderer: React.FC<CanvasRendererProps> = ({
     // Smart mesh density scaling
     const minTriangles = 4
     const maxTriangles = 16
-    const baseTriangles = Math.floor(minTriangles + (gradientDensity * (maxTriangles - minTriangles)))
-    const intensityBonus = Math.floor(gradientIntensity * 6)
+    const baseTriangles = Math.floor(minTriangles + (scaledDensity * (maxTriangles - minTriangles)))
+    const intensityBonus = Math.floor(scaledIntensity * 6)
     const numTriangles = baseTriangles + intensityBonus
     
     // Use image-aware points if colorBlobs exist
