@@ -1,6 +1,7 @@
 {
   "name": "background-generator-nextjs",
   "version": "0.1.0",
+  "alphaVersion": "alpha.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,13 +9,15 @@
     "build": "node scripts/build.js",
     "build:local": "DISABLE_BASEPATH=1 next build",
     "build:opennext": "DISABLE_BASEPATH=1 npm run build",
-    "start": "next start", 
+    "start": "next start",
     "start:local": "DISABLE_BASEPATH=1 next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "preview": "DISABLE_BASEPATH=1 opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
-    "webflow:deploy": "webflow cloud deploy"
+    "webflow:deploy": "webflow cloud deploy",
+    "version:alpha": "node scripts/increment-alpha.js",
+    "deploy:alpha": "npm run version:alpha && git add package.json && git commit -m \"🚀 Alpha $(node -p \"require('./package.json').alphaVersion\") release\" && git push && npm run webflow:deploy"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.5.1",

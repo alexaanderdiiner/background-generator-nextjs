@@ -8,6 +8,7 @@ import { Switch } from './ui/switch'
 import { Label } from './ui/label'
 import { Color, BRAND_COLORS, getRandomMidToneColors } from '@/utils/colors'
 import { Shuffle, Plus, X, Palette, Upload, Image } from 'lucide-react'
+import { getDisplayVersion } from '@/lib/version'
 
 interface ControlsPanelProps {
   colors: Color[]
@@ -573,7 +574,7 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
           <div className="flex items-center gap-3">
             <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">WoW:BG</h2>
             <span className="px-2 py-1 text-xs font-medium text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-900/50 rounded-full border border-blue-200 dark:border-blue-700">
-              alpha
+              {getDisplayVersion()}
             </span>
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-300">Create beautiful, stylized backgrounds</p>

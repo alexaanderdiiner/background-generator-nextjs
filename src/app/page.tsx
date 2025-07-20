@@ -39,7 +39,7 @@ export default function Home() {
   const [colorBlobs, setColorBlobs] = useState<any[]>([])
   
   // Aspect Ratio Controls
-  const [aspectRatio, setAspectRatio] = useState<string>('16:9')
+  const [aspectRatio, setAspectRatio] = useState<string>('1:1')
   
   // Export Resolution Controls
   const [exportResolution, setExportResolution] = useState<string>('M')
