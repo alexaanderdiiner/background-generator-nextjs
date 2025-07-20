@@ -37,6 +37,16 @@ interface ControlsPanelProps {
   onOverlayIntensityChange: (intensity: number) => void
   aspectRatio: string
   onAspectRatioChange: (ratio: string) => void
+  rippleEnabled: boolean
+  rippleFrequencyX: number
+  rippleFrequencyY: number
+  rippleAmplitudeX: number
+  rippleAmplitudeY: number
+  onRippleEnabledChange: (enabled: boolean) => void
+  onRippleFrequencyXChange: (frequency: number) => void
+  onRippleFrequencyYChange: (frequency: number) => void
+  onRippleAmplitudeXChange: (amplitude: number) => void
+  onRippleAmplitudeYChange: (amplitude: number) => void
 }
 
 
@@ -68,7 +78,17 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
   onOverlayTypeChange,
   onOverlayIntensityChange,
   aspectRatio,
-  onAspectRatioChange
+  onAspectRatioChange,
+  rippleEnabled,
+  rippleFrequencyX,
+  rippleFrequencyY,
+  rippleAmplitudeX,
+  rippleAmplitudeY,
+  onRippleEnabledChange,
+  onRippleFrequencyXChange,
+  onRippleFrequencyYChange,
+  onRippleAmplitudeXChange,
+  onRippleAmplitudeYChange,
 }) => {
   const handleColorSelection = (colorName: string) => {
     if (colorName === 'random') {
@@ -1068,6 +1088,94 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
                   {overlayType === 'vertical-glitch' && 'Digital vertical scanline displacement'}
                   {overlayType === 'pattern' && 'Semi-transparent dot overlay'}
                   {overlayType === 'noise' && 'RGB-split noise blocks'}
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Glass Ripple Effect */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <Label className="text-base font-medium">Glass Ripple Effect</Label>
+            <Switch 
+              checked={rippleEnabled} 
+              onCheckedChange={onRippleEnabledChange}
+              id="ripple-toggle"
+            />
+          </div>
+          
+          {rippleEnabled && (
+            <div className="space-y-3 pl-2 border-l-2 border-gray-200">
+              {/* Horizontal Frequency */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">
+                  Horizontal Frequency: {(rippleFrequencyX * 1000).toFixed(1)}
+                </Label>
+                <Slider
+                  value={[rippleFrequencyX]}
+                  onValueChange={(value) => onRippleFrequencyXChange(value[0])}
+                  min={0.005}
+                  max={0.08}
+                  step={0.002}
+                  className="w-full"
+                />
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Controls the density of horizontal waves
+                </p>
+              </div>
+
+              {/* Vertical Frequency */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">
+                  Vertical Frequency: {(rippleFrequencyY * 1000).toFixed(1)}
+                </Label>
+                <Slider
+                  value={[rippleFrequencyY]}
+                  onValueChange={(value) => onRippleFrequencyYChange(value[0])}
+                  min={0.005}
+                  max={0.08}
+                  step={0.002}
+                  className="w-full"
+                />
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Controls the density of vertical waves
+                </p>
+              </div>
+
+              {/* Horizontal Amplitude */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">
+                  Horizontal Intensity: {rippleAmplitudeX.toFixed(1)}px
+                </Label>
+                <Slider
+                  value={[rippleAmplitudeX]}
+                  onValueChange={(value) => onRippleAmplitudeXChange(value[0])}
+                  min={1}
+                  max={30}
+                  step={0.5}
+                  className="w-full"
+                />
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Controls the strength of horizontal distortion
+                </p>
+              </div>
+
+              {/* Vertical Amplitude */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">
+                  Vertical Intensity: {rippleAmplitudeY.toFixed(1)}px
+                </Label>
+                <Slider
+                  value={[rippleAmplitudeY]}
+                  onValueChange={(value) => onRippleAmplitudeYChange(value[0])}
+                  min={1}
+                  max={30}
+                  step={0.5}
+                  className="w-full"
+                />
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Controls the strength of vertical distortion
                 </p>
               </div>
             </div>

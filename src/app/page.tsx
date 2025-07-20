@@ -56,6 +56,13 @@ export default function Home() {
   const [overlayType, setOverlayType] = useState<'glass' | 'horizontal-glitch' | 'vertical-glitch' | 'pattern' | 'noise'>('glass')
   const [overlayIntensity, setOverlayIntensity] = useState(0.5)
 
+  // Glass Ripple Effect
+  const [rippleEnabled, setRippleEnabled] = useState(false)
+  const [rippleFrequencyX, setRippleFrequencyX] = useState(0.02)
+  const [rippleFrequencyY, setRippleFrequencyY] = useState(0.015)
+  const [rippleAmplitudeX, setRippleAmplitudeX] = useState(8)
+  const [rippleAmplitudeY, setRippleAmplitudeY] = useState(12)
+
   const [regenerateTrigger, setRegenerateTrigger] = useState(0)
   const [currentCanvas, setCurrentCanvas] = useState<HTMLCanvasElement | null>(null)
 
@@ -180,6 +187,16 @@ export default function Home() {
           onOverlayIntensityChange={setOverlayIntensity}
           aspectRatio={aspectRatio}
           onAspectRatioChange={setAspectRatio}
+          rippleEnabled={rippleEnabled}
+          rippleFrequencyX={rippleFrequencyX}
+          rippleFrequencyY={rippleFrequencyY}
+          rippleAmplitudeX={rippleAmplitudeX}
+          rippleAmplitudeY={rippleAmplitudeY}
+          onRippleEnabledChange={setRippleEnabled}
+          onRippleFrequencyXChange={setRippleFrequencyX}
+          onRippleFrequencyYChange={setRippleFrequencyY}
+          onRippleAmplitudeXChange={setRippleAmplitudeX}
+          onRippleAmplitudeYChange={setRippleAmplitudeY}
         />
       </div>
       
@@ -202,6 +219,11 @@ export default function Home() {
           overlayType={overlayType}
           overlayIntensity={overlayIntensity}
           aspectRatio={aspectRatio}
+          rippleEnabled={rippleEnabled}
+          rippleFrequencyX={rippleFrequencyX}
+          rippleFrequencyY={rippleFrequencyY}
+          rippleAmplitudeX={rippleAmplitudeX}
+          rippleAmplitudeY={rippleAmplitudeY}
           onCanvasReady={handleCanvasReady}
         />
         

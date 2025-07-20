@@ -27,6 +27,11 @@ interface CanvasRendererProps {
   overlayType?: 'glass' | 'horizontal-glitch' | 'vertical-glitch' | 'pattern' | 'noise'
   overlayIntensity?: number
   aspectRatio?: string
+  rippleEnabled?: boolean
+  rippleFrequencyX?: number
+  rippleFrequencyY?: number
+  rippleAmplitudeX?: number
+  rippleAmplitudeY?: number
   onCanvasReady: (canvas: HTMLCanvasElement) => void
 }
 
@@ -62,6 +67,11 @@ export const CanvasRenderer: React.FC<CanvasRendererProps> = ({
   overlayType = 'glass',
   overlayIntensity = 0.5,
   aspectRatio = '16:9',
+  rippleEnabled = false,
+  rippleFrequencyX = 0.02,
+  rippleFrequencyY = 0.015,
+  rippleAmplitudeX = 8,
+  rippleAmplitudeY = 12,
   onCanvasReady
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -1338,6 +1348,52 @@ export const CanvasRenderer: React.FC<CanvasRendererProps> = ({
     }
   }, [applyGlassRipple, applyGlitchScanlines, applyVerticalGlitchScanlines, applyPatternOverlay, applyNoisePulse])
 
+  // Apply glass ripple distortion effect
+  const applyRippleEffect = useCallback((ctx: CanvasRenderingContext2D, width: number, height: number, time: number = 0) => {
+    if (!rippleEnabled) return
+
+    // Get current canvas image data
+    const imageData = ctx.getImageData(0, 0, width, height)
+    const originalData = new Uint8ClampedArray(imageData.data)
+    const outputData = imageData.data
+
+    // Add time-based animation if enabled
+    let timeOffset = 0
+    if (isAnimated) {
+      timeOffset = time * 0.001 * animationSpeed * 0.5 // Slow ripple animation
+    }
+
+    // Apply ripple distortion to each pixel
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        // Calculate sine wave offsets with time animation
+        const offsetX = Math.sin(y * rippleFrequencyY + timeOffset) * rippleAmplitudeX
+        const offsetY = Math.sin(x * rippleFrequencyX + timeOffset * 1.3) * rippleAmplitudeY
+        
+        // Calculate source pixel position
+        let sourceX = x + offsetX
+        let sourceY = y + offsetY
+        
+        // Handle edge cases by clamping to canvas bounds
+        sourceX = Math.max(0, Math.min(width - 1, Math.round(sourceX)))
+        sourceY = Math.max(0, Math.min(height - 1, Math.round(sourceY)))
+        
+        // Get source and destination pixel indices
+        const sourceIndex = (sourceY * width + sourceX) * 4
+        const destIndex = (y * width + x) * 4
+        
+        // Copy RGBA values from source to destination
+        outputData[destIndex] = originalData[sourceIndex]         // R
+        outputData[destIndex + 1] = originalData[sourceIndex + 1] // G
+        outputData[destIndex + 2] = originalData[sourceIndex + 2] // B
+        outputData[destIndex + 3] = originalData[sourceIndex + 3] // A
+      }
+    }
+
+    // Apply the distorted image data back to canvas
+    ctx.putImageData(imageData, 0, 0)
+  }, [rippleEnabled, rippleFrequencyX, rippleFrequencyY, rippleAmplitudeX, rippleAmplitudeY, isAnimated, animationSpeed])
+
   const drawBackground = useCallback((time: number = 0) => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -1426,9 +1482,14 @@ export const CanvasRenderer: React.FC<CanvasRendererProps> = ({
       applyOverlayEffect(ctx, canvas.width, canvas.height, overlayType, overlayIntensity)
     }
 
+    // Step 8: Apply glass ripple distortion effect (if enabled)
+    if (rippleEnabled) {
+      applyRippleEffect(ctx, canvas.width, canvas.height, time)
+    }
+
     // Notify parent that canvas is ready
     onCanvasReady(canvas)
-  }, [colors, posterizeSteps, noiseIntensity, gradientStyle, gradientIntensity, gradientDensity, zoomLevel, isAnimated, overlayEnabled, overlayType, overlayIntensity, aspectRatio, onCanvasReady, createGradient, applyHeavyBlur, posterizeImageData, addRichGrain, applyOverlayEffect])
+  }, [colors, posterizeSteps, noiseIntensity, gradientStyle, gradientIntensity, gradientDensity, zoomLevel, isAnimated, overlayEnabled, overlayType, overlayIntensity, aspectRatio, rippleEnabled, onCanvasReady, createGradient, applyHeavyBlur, posterizeImageData, addRichGrain, applyOverlayEffect, applyRippleEffect])
 
   // High-resolution rendering for export
   const renderAtResolution = useCallback((exportCanvas: HTMLCanvasElement, width: number, height: number) => {
