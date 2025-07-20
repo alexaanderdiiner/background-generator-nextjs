@@ -1537,11 +1537,28 @@ export const CanvasRenderer: React.FC<CanvasRendererProps> = ({
     //   ctx.fillRect(0, 0, width, height)
     // }
 
+    // Step 6: Apply subtle vignette for depth
+    const vignette = ctx.createRadialGradient(
+      width / 2, height / 2, 0,
+      width / 2, height / 2, Math.sqrt(width * width + height * height) / 2
+    )
+    vignette.addColorStop(0, 'rgba(0, 0, 0, 0)')
+    vignette.addColorStop(0.7, 'rgba(0, 0, 0, 0)')
+    vignette.addColorStop(1, 'rgba(0, 0, 0, 0.1)')
+    
+    ctx.fillStyle = vignette
+    ctx.fillRect(0, 0, width, height)
+
     // Step 7: Apply overlay effects (if enabled)
     if (overlayEnabled && overlayIntensity > 0) {
       applyOverlayEffect(ctx, width, height, overlayType, overlayIntensity)
     }
-  }, [colors, posterizeSteps, noiseIntensity, gradientStyle, gradientIntensity, gradientDensity, zoomLevel, overlayEnabled, overlayType, overlayIntensity, createGradient, applyHeavyBlur, addRichGrain, applyOverlayEffect])
+
+    // Step 8: Apply glass ripple distortion effect (if enabled)
+    if (rippleEnabled) {
+      applyRippleEffect(ctx, width, height, 0) // Static export (time = 0)
+    }
+  }, [colors, posterizeSteps, noiseIntensity, gradientStyle, gradientIntensity, gradientDensity, zoomLevel, overlayEnabled, overlayType, overlayIntensity, rippleEnabled, createGradient, applyHeavyBlur, addRichGrain, applyOverlayEffect, applyRippleEffect])
 
   // Expose high-resolution rendering to parent via canvas ref
   useEffect(() => {

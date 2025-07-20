@@ -1039,7 +1039,8 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
           </p>
         </div>
 
-        {/* Overlay Effects */}
+        {/* Overlay Effects - Hidden for now */}
+        {false && (
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <Label className="text-base font-medium">Overlay Effects</Label>
@@ -1093,11 +1094,12 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
             </div>
           )}
         </div>
+        )}
 
         {/* Glass Ripple Effect */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <Label className="text-base font-medium">Glass Ripple Effect</Label>
+            <Label className="text-base font-medium">Add waves</Label>
             <Switch 
               checked={rippleEnabled} 
               onCheckedChange={onRippleEnabledChange}
