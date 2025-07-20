@@ -861,8 +861,8 @@ export const CanvasRenderer: React.FC<CanvasRendererProps> = ({
       const rayVariation = 0.8 + (Math.sin(i * 0.5) * 0.4) // Vary each ray slightly
       const finalOpacity = Math.floor(baseOpacity * rayVariation * 255)
       
-      const centerHex = Math.min(255, finalOpacity * 1.2).toString(16).padStart(2, '0')
-      const midHex = finalOpacity.toString(16).padStart(2, '0')
+      const centerHex = Math.floor(Math.min(255, finalOpacity * 1.2)).toString(16).padStart(2, '0')
+      const midHex = Math.floor(finalOpacity).toString(16).padStart(2, '0')
       const edgeHex = Math.floor(finalOpacity * 0.3).toString(16).padStart(2, '0')
       
       gradient.addColorStop(0, `${safeHex}${centerHex}`)
