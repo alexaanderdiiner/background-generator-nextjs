@@ -151,7 +151,7 @@ export default function Home() {
       </div>
       
       {/* Left Sidebar - Controls Panel */}
-      <div className="w-80 h-full overflow-y-auto bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
+      <div className="w-80 h-full overflow-y-auto">
         <ControlsPanel
           colors={colors}
           posterizeSteps={posterizeSteps}

@@ -713,7 +713,7 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
               </div>
             )}
             
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="text-xs text-gray-500">
               Upload an image to extract colors and composition. Creates an abstract, hyper-zoomed gradient inspired by your photo.
             </p>
           </div>
@@ -819,7 +819,7 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
             step={0.1}
             className="w-full"
           />
-          <p className="text-xs text-gray-500 dark:text-gray-400">
+          <p className="text-xs text-gray-500">
             Zoom in for fine details, zoom out for broader patterns
           </p>
         </div>
@@ -861,7 +861,7 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
                   step={0.1}
                   className="w-full"
                 />
-                <p className="text-xs text-gray-500 dark:text-gray-400">
+                <p className="text-xs text-gray-500">
                   Very slow = meditative, subtle morphing
                 </p>
               </div>
@@ -893,7 +893,7 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
             step={0.01}
             className="w-full"
           />
-          <p className="text-xs text-gray-500 dark:text-gray-400">
+          <p className="text-xs text-gray-500">
             Adds organic film-like texture to the background
           </p>
         </div>
@@ -941,7 +941,7 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
                   step={0.05}
                   className="w-full"
                 />
-                <p className="text-xs text-gray-500 dark:text-gray-400">
+                <p className="text-xs text-gray-500">
                   {overlayType === 'glass' && 'Vertical sine wave distortion'}
                   {overlayType === 'horizontal-glitch' && 'Digital horizontal scanline displacement'}
                   {overlayType === 'vertical-glitch' && 'Digital vertical scanline displacement'}
