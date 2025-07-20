@@ -4,12 +4,17 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:debug": "next dev --inspect",
     "build": "node scripts/build.js",
+    "build:local": "DISABLE_BASEPATH=1 next build",
     "build:opennext": "DISABLE_BASEPATH=1 npm run build",
-    "start": "next start",
+    "start": "next start", 
+    "start:local": "DISABLE_BASEPATH=1 next start",
     "lint": "next lint",
+    "type-check": "tsc --noEmit",
     "preview": "DISABLE_BASEPATH=1 opennextjs-cloudflare build && opennextjs-cloudflare preview",
-    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy"
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "webflow:deploy": "webflow cloud deploy"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.5.1",

@@ -708,24 +708,24 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
 
         {/* Brand Color Picker Modal */}
         {colorPickerIndex !== null && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[60] p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
               {/* Header */}
-              <div className="p-6 border-b border-gray-200">
-                <h3 className="text-xl font-semibold mb-3">
+              <div className="p-6 border-b border-gray-200 dark:border-gray-600">
+                <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">
                   Choose Brand Color {colorPickerIndex + 1}
                 </h3>
                 
                 {/* Current Color Preview */}
-                <div className="flex items-center gap-4 bg-gray-50 p-4 rounded-lg">
+                <div className="flex items-center gap-4 bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                   <div
-                    className="w-16 h-16 rounded-xl border border-gray-300 shadow-sm"
+                    className="w-16 h-16 rounded-xl border border-gray-300 dark:border-gray-500 shadow-sm"
                     style={{ backgroundColor: customColor }}
                   />
                   <div>
-                    <Label className="text-base font-medium">Current Selection</Label>
-                    <p className="text-lg font-mono text-gray-700 mt-1">{customColor}</p>
-                    <p className="text-sm text-gray-500">
+                    <Label className="text-base font-medium text-gray-900 dark:text-white">Current Selection</Label>
+                    <p className="text-lg font-mono text-gray-700 dark:text-gray-200 mt-1">{customColor}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
                       {BRAND_COLORS.find(c => c.hex === customColor)?.name || 'Custom Color'}
                     </p>
                   </div>
@@ -733,8 +733,8 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
               </div>
               
               {/* Color Family Tabs */}
-              <div className="p-6 pb-4 border-b border-gray-200">
-                <Label className="text-base font-medium mb-3 block">Browse by Family</Label>
+              <div className="p-6 pb-4 border-b border-gray-200 dark:border-gray-600">
+                <Label className="text-base font-medium mb-3 block text-gray-900 dark:text-white">Browse by Family</Label>
                 <div className="flex flex-wrap gap-2">
                   {['All', 'Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Purple', 'Pink'].map(family => {
                     const familyCount = family === 'All' 
@@ -747,7 +747,7 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
                         variant={selectedColorFamily === family ? "default" : "outline"}
                         size="sm"
                         onClick={() => setSelectedColorFamily(family)}
-                        className="text-sm"
+                        className="text-sm dark:text-gray-200 dark:border-gray-500 dark:hover:bg-gray-600"
                       >
                         {family} ({familyCount})
                       </Button>
@@ -760,10 +760,10 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
               <div className="flex-1 p-6 overflow-y-auto">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <Label className="text-base font-medium">
+                    <Label className="text-base font-medium text-gray-900 dark:text-white">
                       {selectedColorFamily === 'All' ? 'All Colors' : `${selectedColorFamily} Colors`}
                     </Label>
-                    <span className="text-sm text-gray-500">
+                    <span className="text-sm text-gray-500 dark:text-gray-400">
                       {getFilteredColors().length} colors
                     </span>
                   </div>
@@ -778,20 +778,20 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
                         <div
                           className={`w-12 h-12 rounded-xl border-3 transition-all duration-200 hover:scale-110 hover:shadow-lg ${
                             customColor === color.hex 
-                              ? 'border-blue-500 shadow-lg ring-2 ring-blue-200' 
-                              : 'border-gray-300 hover:border-gray-400'
+                              ? 'border-blue-500 shadow-lg ring-2 ring-blue-200 dark:ring-blue-800' 
+                              : 'border-gray-300 dark:border-gray-500 hover:border-gray-400 dark:hover:border-gray-400'
                           }`}
                           style={{ backgroundColor: color.hex }}
                         />
                         
                         {/* Tooltip */}
-                        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+                        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
                           {color.name}
                         </div>
                         
                         {/* Selected indicator */}
                         {customColor === color.hex && (
-                          <div className="absolute top-1 right-1 w-3 h-3 bg-blue-500 rounded-full border-2 border-white shadow-sm" />
+                          <div className="absolute top-1 right-1 w-3 h-3 bg-blue-500 rounded-full border-2 border-white dark:border-gray-800 shadow-sm" />
                         )}
                       </div>
                     ))}
@@ -800,13 +800,13 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
               </div>
               
               {/* Footer */}
-              <div className="p-6 border-t border-gray-200 bg-gray-50">
+              <div className="p-6 border-t border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700">
                 <div className="flex gap-3">
                   <Button onClick={handleColorConfirm} className="flex-1 text-base py-2">
                     <Palette className="w-5 h-5 mr-2" />
                     Apply Color
                   </Button>
-                  <Button variant="outline" onClick={() => setColorPickerIndex(null)} className="text-base py-2 px-6">
+                  <Button variant="outline" onClick={() => setColorPickerIndex(null)} className="text-base py-2 px-6 dark:text-gray-200 dark:border-gray-500 dark:hover:bg-gray-600">
                     Cancel
                   </Button>
                 </div>
