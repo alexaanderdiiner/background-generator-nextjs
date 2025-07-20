@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { CanvasRenderer } from '@/components/CanvasRenderer'
 import { ControlsPanel } from '@/components/ControlsPanel'
+import { ThemeToggle } from '@/components/theme-toggle'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Color, getRandomMidToneColors } from '@/utils/colors'
@@ -143,9 +144,14 @@ export default function Home() {
   }, [])
 
   return (
-    <main className="flex h-screen bg-neutral-100">
+    <main className="flex h-screen bg-neutral-100 dark:bg-neutral-900 transition-colors relative">
+      {/* Theme Toggle - Top Right Corner */}
+      <div className="absolute top-4 right-4 z-50">
+        <ThemeToggle />
+      </div>
+      
       {/* Left Sidebar - Controls Panel */}
-      <div className="w-80 h-full overflow-y-auto">
+      <div className="w-80 h-full overflow-y-auto bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
         <ControlsPanel
           colors={colors}
           posterizeSteps={posterizeSteps}

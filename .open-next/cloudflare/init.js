@@ -49,7 +49,7 @@ function initRuntime() {
   };
   Object.assign(globalThis, {
     Request: CustomRequest,
-    __BUILD_TIMESTAMP_MS__: 1752972470325,
+    __BUILD_TIMESTAMP_MS__: 1752972940602,
     __NEXT_BASE_PATH__: "/wow-bg",
     __ASSETS_RUN_WORKER_FIRST__: false,
     // The external middleware will use the convertTo function of the `edge` converter
