@@ -9,6 +9,7 @@ import { Label } from './ui/label'
 import { Color, BRAND_COLORS, getRandomMidToneColors } from '@/utils/colors'
 import { Shuffle, Plus, X, Palette, Upload, Image } from 'lucide-react'
 import { getDisplayVersion } from '@/lib/version'
+import { ModalPortal } from './ui/modal-portal'
 
 interface ControlsPanelProps {
   colors: Color[]
@@ -708,13 +709,13 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
         </div>
 
         {/* Brand Color Picker Modal */}
-        {colorPickerIndex !== null && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[60] p-4">
-            <div className="bg-white dark:bg-gray-800 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
+        <ModalPortal isOpen={colorPickerIndex !== null}>
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[9999] p-4" onClick={(e) => e.target === e.currentTarget && setColorPickerIndex(null)}>
+            <div className="bg-white dark:bg-gray-800 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl" onClick={(e) => e.stopPropagation()}>
               {/* Header */}
               <div className="p-6 border-b border-gray-200 dark:border-gray-600">
                 <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">
-                  Choose Brand Color {colorPickerIndex + 1}
+                  Choose Brand Color {(colorPickerIndex ?? 0) + 1}
                 </h3>
                 
                 {/* Current Color Preview */}
@@ -814,7 +815,7 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
               </div>
             </div>
           </div>
-        )}
+        </ModalPortal>
 
 {/* Image Analysis - Hidden due to performance issues */}
         {false && (
@@ -1100,7 +1101,7 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
         {/* Glass Ripple Effect */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <Label className="text-base font-medium">Add waves</Label>
+            <Label>Add Waves</Label>
             <Switch 
               checked={rippleEnabled} 
               onCheckedChange={onRippleEnabledChange}

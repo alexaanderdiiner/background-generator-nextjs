@@ -8,10 +8,21 @@ const packageJsonPath = path.join(__dirname, '..', 'package.json');
 const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
 
 // Extract current alpha version number
-const currentAlpha = packageJson.alphaVersion || 'alpha.0';
-const currentNumber = parseInt(currentAlpha.split('.')[1] || '0');
-const newNumber = currentNumber + 1;
-const newAlphaVersion = `alpha.${newNumber}`;
+const currentAlpha = packageJson.alphaVersion || 'v0.5.000';
+// Parse version like "v0.5.001" -> extract the last number
+const versionMatch = currentAlpha.match(/^v(\d+)\.(\d+)\.(\d+)$/);
+if (!versionMatch) {
+  console.error('Invalid version format. Expected format: v0.5.001');
+  process.exit(1);
+}
+
+const major = parseInt(versionMatch[1]);
+const minor = parseInt(versionMatch[2]); 
+const patch = parseInt(versionMatch[3]);
+const newPatch = patch + 1;
+
+// Format with leading zeros (3 digits for patch)
+const newAlphaVersion = `v${major}.${minor}.${newPatch.toString().padStart(3, '0')}`;
 
 // Update package.json
 packageJson.alphaVersion = newAlphaVersion;

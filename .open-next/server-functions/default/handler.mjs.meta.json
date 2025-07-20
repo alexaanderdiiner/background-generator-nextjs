@@ -2783,7 +2783,7 @@
       "format": "cjs"
     },
     ".open-next/server-functions/default/.next/server/app/page.js": {
-      "bytes": 173050,
+      "bytes": 173715,
       "imports": [
         {
           "path": ".open-next/server-functions/default/node_modules/next/dist/client/components/action-async-storage.external.js",
@@ -5226,7 +5226,7 @@
           "bytesInOutput": 4019
         },
         ".open-next/server-functions/default/.next/server/app/page.js": {
-          "bytesInOutput": 191647
+          "bytesInOutput": 192312
         },
         ".open-next/server-functions/default/node_modules/next/dist/server/require.js": {
           "bytesInOutput": 11878
@@ -5406,7 +5406,7 @@
           "bytesInOutput": 49064
         }
       },
-      "bytes": 2025397
+      "bytes": 2026062
     }
   }
 }
