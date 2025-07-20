@@ -60,6 +60,56 @@ A modern, interactive gradient background generator built with Next.js, TypeScri
    yarn dev
    ```
 
+   Open [http://localhost:3000](http://localhost:3000) to see the app running locally.
+
+## 🔧 Local Development Workflow
+
+### Development vs Production
+- **Local Development**: Runs on `http://localhost:3000` (no basePath)
+- **Webflow Cloud**: Deployed to `/wow-bg` mount path
+- **Configuration**: Automatically handled by `next.config.js`
+
+### Available Scripts
+
+```bash
+# Development
+npm run dev              # Start development server
+npm run dev:debug        # Start with Node.js debugging
+
+# Local Testing  
+npm run build:local      # Build for local testing (no basePath)
+npm run start:local      # Start local production build
+npm run type-check       # TypeScript type checking
+npm run lint             # ESLint checking
+
+# Webflow Cloud Deployment
+npm run build            # Build for Webflow Cloud (with basePath)
+npm run webflow:deploy   # Deploy to Webflow Cloud
+```
+
+### 🔄 Recommended Development Process
+
+1. **Make changes locally** and test at `http://localhost:3000`
+2. **Verify functionality** with the theme toggle, canvas rendering, etc.
+3. **Run type checking**: `npm run type-check`
+4. **Test production build locally**: `npm run build:local && npm run start:local`
+5. **Deploy to Webflow**: `npm run webflow:deploy`
+
+### 🎨 Testing Features Locally
+
+All features work in local development:
+- ✅ **Theme Toggle**: Light/Dark/System modes
+- ✅ **Canvas Rendering**: All gradient styles and effects  
+- ✅ **Export Functionality**: High-resolution WebP export
+- ✅ **Image Upload**: Color extraction and analysis
+- ✅ **Real-time Controls**: Sliders, dropdowns, color swatches
+
+### 🐛 Troubleshooting
+
+- **Port in use**: Try `npm run dev -- -p 3001` for different port
+- **Build issues**: Clear `.next` folder: `rm -rf .next`
+- **Type errors**: Run `npm run type-check` for detailed info
+
 4. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
 
