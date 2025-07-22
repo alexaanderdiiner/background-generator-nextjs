@@ -1,7 +1,7 @@
 {
   "name": "background-generator-nextjs",
-  "version": "0.1.0",
-  "alphaVersion": "v0.5.005",
+  "version": "0.3.0",
+  "alphaVersion": "v0.7.000",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -17,7 +17,12 @@
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "webflow:deploy": "webflow cloud deploy",
     "version:alpha": "node scripts/increment-alpha.js",
-    "deploy:alpha": "npm run version:alpha && git add package.json && git commit -m \"🚀 Alpha $(node -p \"require('./package.json').alphaVersion\") release\" && git push && npm run webflow:deploy"
+    "version:minor": "node scripts/increment-minor.js",
+    "version:major": "node scripts/increment-major.js",
+    "setup:hooks": "node scripts/setup-hooks.js",
+    "deploy:alpha": "npm run version:alpha && git add package.json && git commit -m \"🚀 Alpha $(node -p \"require('./package.json').alphaVersion\") release\" && git push && npm run webflow:deploy",
+    "deploy:minor": "npm run version:minor && git add package.json && git commit -m \"🎯 Minor $(node -p \"require('./package.json').alphaVersion\") release\" && git push && npm run webflow:deploy",
+    "deploy:major": "npm run version:major && git add package.json && git commit -m \"🔥 Major $(node -p \"require('./package.json').alphaVersion\") release\" && git push && npm run webflow:deploy"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.5.1",
